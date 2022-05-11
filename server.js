@@ -16,10 +16,10 @@ const port = process.env.PORT || 3000;
     app.use(Gun.serve);
     app.use(express.static('/gun'));
     
-    app.all("*", (req: Request, res: Response) => {
+    app.all("*", (req, res) => {
       return handle(req, res);
     });
-    var server = app.listen(port, (err?: any) => {
+    var server = app.listen(port, (err) => {
       if (err) throw err;
       console.log(`> Ready on localhost:${port} - env ${process.env.NODE_ENV}`);
     });
