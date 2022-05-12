@@ -60,7 +60,7 @@ const Home: NextPage = () => {
         description="A short description goes here."
       />
       <div className="flex flex-col gap-4">
-        <form  className='flex flex-row gap-4' onSubmit={()=>{handleNewMessage(localMsg)}}>          
+        <form  className='flex flex-row gap-4' onSubmit={(ev)=>{ ev.preventDefault();handleNewMessage(localMsg)}}>          
           <input type="text" className='input input-bordered grow w-full' value={localMsg} onChange={ev => setLocalMsg(ev.target.value)} />
           <button type="submit" className='btn'>Send</button>
         </form>
