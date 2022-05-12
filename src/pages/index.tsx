@@ -2,7 +2,7 @@ import { CommonTemplate } from '@templates/CommonTemplate'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGun } from 'lib/hooks/GunHook';
 import { IGunChain } from 'gun';
 import GUN from 'gun';
@@ -15,12 +15,13 @@ const Home: NextPage = () => {
   const [str, setStr] = useState("");
   const [localMsg, setLocalMsg] = useState("");
   const [gunChain, setGunChain] = useState<IGunChain<any> | null>(null);
-  const [messages, setMessage] = useState<Array<{ msg: string, time: number }>>([]);
+  const [messages, setMessages] = useState<{[time:number]:{ msg: string, time: number }}>({});
+  const sortedMessage = useMemo(()=>Object.entries(messages).sort((a,b)=>b[1].time - a[1].time).map(it=>it[1]), [messages]);
   useEffect(() => {
     if (!gun)
       return;
 
-    gun.get("chat").map().once(async (data, id) => {
+    gun.get("chat").map().on(async (data, id) => {
       if (data) {
         const key = "#foo";
         let message = {
@@ -29,7 +30,7 @@ const Home: NextPage = () => {
           time: GUN.state.is(data, 'msg')
         }
         if (message && message.msg && message.time)
-          setMessage(messages => [...messages, message].sort((a, b) => a.time - b.time));
+          setMessages(messages => ({...messages, [message.time]: message}));
       }
     });
     // gun.get("test").on(state => {
@@ -59,12 +60,12 @@ const Home: NextPage = () => {
         description="A short description goes here."
       />
       <div className="flex flex-col gap-4">
-        <div className='flex flex-row'>
+        <form  className='flex flex-row gap-4' onSubmit={()=>{handleNewMessage(localMsg)}}>          
           <input type="text" className='input input-bordered grow w-full' value={localMsg} onChange={ev => setLocalMsg(ev.target.value)} />
-          <button type="button" className='btn' onClick={() => handleNewMessage(localMsg)}>Send</button>
-        </div>
+          <button type="submit" className='btn'>Send</button>
+        </form>
         <div className='flex flex-col gap-4'>
-          {messages?.map((it, idx) => <div key={idx} className="rounded-md bg-base-content text-base-100 flex flex-row p-4">
+          {sortedMessage?.map((it, idx) => <div key={idx} className="rounded-md bg-base-content text-base-200 flex flex-row p-4">
             <span className="grow">{it.msg} </span><span className=''>{moment(it.time)?.format("YYYY-MM-DD HH:mm:ss")}</span>
           </div>)}
         </div>
