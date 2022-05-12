@@ -5,7 +5,7 @@ import { NextSeo } from 'next-seo';
 import { useEffect, useMemo, useState } from 'react';
 import { useGun } from 'lib/hooks/GunHook';
 import { IGunChain } from 'gun';
-import GUN from 'gun';
+import GUN from 'gun/gun';
 import SEA from 'gun/sea';
 import { stringify } from 'querystring';
 import moment from 'moment';

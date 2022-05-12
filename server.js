@@ -25,5 +25,5 @@ nextApp.prepare().then(() => {
     console.log(`> Ready on localhost:${port} - env ${process.env.NODE_ENV}`);
   });
   
-  var gun = Gun({	file: 'data', web: server });
+  var gun = Gun({	web: server });
 })

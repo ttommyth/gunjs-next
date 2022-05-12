@@ -1,6 +1,6 @@
 import { IGun, IGunInstance } from 'gun';
 import React, { useContext, useEffect, useState } from 'react'
-const Gun = require('gun');
+import Gun from 'gun/gun';
 
 const GunContext = React.createContext({} as {
     gun: IGunInstance | null
